@@ -23,9 +23,9 @@ export default function Navbar() {
                         <li><a className="text-white">Contact Us</a></li>
                     </ul>
                 </div>
-                <div className="px-4 py-2 text-blue-500 border border-blue-500 rounded-full inline-flex items-center bg-transparent navEndBtn">
+                <button className="px-4 py-2 text-blue-500 border border-blue-500 rounded-full inline-flex items-center bg-transparent navEndBtn">
                     <a>Login</a>
-                </div>
+                </button>
             </div>
         </main>
     );
