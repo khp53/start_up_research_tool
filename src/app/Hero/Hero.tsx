@@ -2,7 +2,7 @@ import React from 'react'
 
 export default function Hero() {
     return (
-        <div className="flex items-center justify-between h-screen px-10">
+        <div className="flex items-center justify-between w-full px-10">
             <div className="flex flex-col items-start">
                 <h1 className="text-4xl text-white font-bold text-left mainText">Welcome to Start Up Research AI</h1>
                 <h3 className="text-1xl text-white font-normal text-left">Customizable, helps you to do a deep research before getting started</h3>
