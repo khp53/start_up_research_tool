@@ -47,3 +47,7 @@ body {
     text-wrap: balance;
   }
 }
+
+.h-screenMod {
+  height: 72.5vh;
+}

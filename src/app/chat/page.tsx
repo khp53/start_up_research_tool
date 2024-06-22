@@ -6,7 +6,7 @@ export default function Chat() {
     return (
         <main>
             <Navbar />
-            <div className="flex flex-col items-center mx-10">
+            <div className="flex flex-col items-center justify-between h-screenMod mx-10">
                 <h1 className="text-3xl text-white font-bold text-left mainText my-5">Chat with us</h1>
                 <div className="w-full my-10">
                     {/* Mock array of chat messages for demonstration */}
