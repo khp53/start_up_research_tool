@@ -11,7 +11,7 @@ function ChatBox() {
     }, []);
 
     const [message, setMessage] = useState('');
-    const [chatHistory, setChatHistory] = useState([]);
+    const [chatHistory, setChatHistory] = useState<{ id: number; sender: string; message: string; }[]>([]);
 
     const sendMessage = async () => {
         const endpoint = 'https://api.cohere.com/v1/chat';
@@ -79,26 +79,16 @@ function ChatBox() {
         }
     };
 
+    const addChatHistorySender = () => {
+        setChatHistory([...chatHistory, { id: message.length + 1, sender: "User", message: message, }]);
+    }
+
     return (
         <div className="flex flex-col items-center justify-between h-screenMod mx-10">
             <h1 className="text-3xl text-white font-bold text-left mainText my-5">Chat with us</h1>
             <div ref={scrollRef} className="w-full my-10 px-5 custom-scrollbar" style={{ height: '500px', overflowY: 'scroll' }}>
                 {/* Mock array of chat messages for demonstration */}
-                {[
-                    { id: 1, sender: "User", message: "Hello!" },
-                    { id: 2, sender: "Support", message: "Hi, how can we help you?" },
-                    { id: 2, sender: "User", message: "Hi, how can we help you?" },
-                    { id: 2, sender: "Support", message: "Hi, how can we help you?" },
-                    { id: 2, sender: "User", message: "Hi, how can we help you?" },
-                    { id: 2, sender: "Support", message: "Hi, how can we help you?" },
-                    { id: 2, sender: "User", message: "Hi, how can we help you?" },
-                    { id: 2, sender: "Support", message: "Hi, how can we help you?" },
-                    { id: 2, sender: "User", message: "Hi, how can we help you?" },
-                    { id: 2, sender: "Support", message: "Hi, how can we help you?" },
-                    { id: 2, sender: "User", message: "Hi, how can we help you?" },
-                    { id: 2, sender: "Support", message: "Hi, how can we help you?" },
-                    { id: 2, sender: "User", message: "Hi, how can we help you?" },
-                ].map((chat) => (
+                {chatHistory.map((chat) => (
                     <div key={chat.id} className={`chat ${chat.sender === "Support" ? "chat-start" : "chat-end"}`}>
                         <div className={`chat-bubble ${chat.sender === "Support" ? "chat-bubble-info" : "chat-bubble-accent"}`}>{chat.message}</div>
                     </div>
@@ -110,9 +100,14 @@ function ChatBox() {
                     placeholder="Type here"
                     className="input input-bordered w-full text-white"
                     value={message}
-                    onChange={(e) => setMessage(e.target.value)}
+                    onChange={(e) => {
+                        setMessage(e.target.value);
+                    }}
                 />
-                <button className="btn btn-primary mx-2" onClick={sendMessage}>Send</button>
+                <button className="btn btn-primary mx-2" onClick={() => {
+                    sendMessage();
+                    addChatHistorySender();
+                }}>Send</button>
             </div>
         </div>
     )
