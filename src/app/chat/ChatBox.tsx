@@ -3,15 +3,15 @@ import React, { useEffect, useRef, useState } from 'react'
 
 function ChatBox() {
     const scrollRef = useRef<HTMLDivElement>(null);
+    const [message, setMessage] = useState('');
+    const [chatHistory, setChatHistory] = useState<{ id: number; sender: string; message: string; }[]>([]);
 
     useEffect(() => {
         if (scrollRef.current) {
             scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
         }
-    }, []);
+    }, [chatHistory]);
 
-    const [message, setMessage] = useState('');
-    const [chatHistory, setChatHistory] = useState<{ id: number; sender: string; message: string; }[]>([]);
 
     const sendMessage = async () => {
         const endpoint = 'https://api.cohere.com/v1/chat';
@@ -54,7 +54,8 @@ function ChatBox() {
                     for (let i = 0; i < lines.length - 1; i++) {
                         try {
                             let jsonObj = JSON.parse(lines[i]);
-                            console.log('Parsed JSON object:', jsonObj);
+                            console.log('Parsed JSON object:', jsonObj['text']);
+                            addChatHistoryReceiver(jsonObj['response']['text']);
                         } catch (e) {
                             console.error('Failed to parse JSON object:', lines[i], e);
                         }
@@ -69,7 +70,8 @@ function ChatBox() {
             if (jsonStr.trim()) {
                 try {
                     let jsonObj = JSON.parse(jsonStr);
-                    console.log('Parsed JSON object:', jsonObj);
+                    console.log('Parsed JSON object 2:', jsonObj);
+                    addChatHistoryReceiver(jsonObj['response']['text']);
                 } catch (e) {
                     console.error('Failed to parse JSON object:', jsonStr, e);
                 }
@@ -80,14 +82,17 @@ function ChatBox() {
     };
 
     const addChatHistorySender = () => {
-        setChatHistory([...chatHistory, { id: message.length + 1, sender: "User", message: message, }]);
+        setChatHistory(chatHistory => [...chatHistory, { id: chatHistory.length + 1, sender: "User", message: message, }]);
+    }
+
+    const addChatHistoryReceiver = (responseMsg: string) => {
+        setChatHistory(chatHistory => [...chatHistory, { id: chatHistory.length + 1, sender: "Support", message: responseMsg, }]);
     }
 
     return (
         <div className="flex flex-col items-center justify-between h-screenMod mx-10">
             <h1 className="text-3xl text-white font-bold text-left mainText my-5">Chat with us</h1>
             <div ref={scrollRef} className="w-full my-10 px-5 custom-scrollbar" style={{ height: '500px', overflowY: 'scroll' }}>
-                {/* Mock array of chat messages for demonstration */}
                 {chatHistory.map((chat) => (
                     <div key={chat.id} className={`chat ${chat.sender === "Support" ? "chat-start" : "chat-end"}`}>
                         <div className={`chat-bubble ${chat.sender === "Support" ? "chat-bubble-info" : "chat-bubble-accent"}`}>{chat.message}</div>
@@ -103,10 +108,18 @@ function ChatBox() {
                     onChange={(e) => {
                         setMessage(e.target.value);
                     }}
+                    onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                            sendMessage();
+                            addChatHistorySender();
+                            setMessage('');
+                        }
+                    }}
                 />
                 <button className="btn btn-primary mx-2" onClick={() => {
                     sendMessage();
                     addChatHistorySender();
+                    setMessage('');
                 }}>Send</button>
             </div>
         </div>
