@@ -14,8 +14,8 @@ function ChatBox() {
 
 
     const sendMessage = async () => {
-        const endpoint = 'https://api.cohere.com/v1/chat';
-        const token = 'V2YLTAxGjmvxplq3LHSSqBS3ZsG1D5IrMM2yaUSh';
+        const endpoint = process.env.NEXT_PUBLIC_API_ENDPOINT || '';
+        const token = process.env.NEXT_PUBLIC_COHERA_API_TOKEN || '';
         const data = {
             "message": message,
             "chat_history": [],
