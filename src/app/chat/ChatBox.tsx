@@ -1,5 +1,6 @@
 "use client";
 import React, { useEffect, useRef, useState } from 'react'
+//import ChatComponent from './ChatComponent';
 
 function ChatBox() {
     const scrollRef = useRef<HTMLDivElement>(null);
@@ -94,10 +95,11 @@ function ChatBox() {
     }
 
     return (
+        //<ChatComponent chatHistory={chatHistory} setChatHistory={setChatHistory} message={message} setMessage={setMessage} sendMessage={sendMessage} addChatHistorySender={addChatHistorySender} loading={loading} scrollRef={scrollRef} />
         <div className="flex flex-col items-center justify-between h-screenMod mx-10">
             <h1 className="text-3xl text-white font-bold text-left mainText my-5">Chat with us</h1>
             <div ref={scrollRef} className="w-full my-10 px-5 custom-scrollbar" style={{ height: '500px', overflowY: 'scroll' }}>
-                {chatHistory.map((chat) => (
+                {chatHistory.map((chat: any) => (
                     <div key={chat.id} className={`chat ${chat.sender === "Support" ? "chat-start" : "chat-end"}`}>
                         <div className={`chat-bubble ${chat.sender === "Support" ? "chat-bubble-info" : "chat-bubble-accent"}`}>{chat.message}</div>
                     </div>
