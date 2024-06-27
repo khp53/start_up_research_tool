@@ -4,6 +4,7 @@ import React, { useEffect, useRef, useState } from 'react'
 function ChatBox() {
     const scrollRef = useRef<HTMLDivElement>(null);
     const [message, setMessage] = useState('');
+    const [loading, setLoading] = useState(false);
     const [chatHistory, setChatHistory] = useState<{ id: number; sender: string; message: string; }[]>([]);
 
     useEffect(() => {
@@ -14,6 +15,7 @@ function ChatBox() {
 
 
     const sendMessage = async () => {
+        setLoading(true);
         const endpoint = process.env.NEXT_PUBLIC_API_ENDPOINT || '';
         const token = process.env.NEXT_PUBLIC_COHERA_API_TOKEN || '';
         const data = {
@@ -78,6 +80,8 @@ function ChatBox() {
             }
         } catch (error) {
             console.error('Failed to send message:', error);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -99,6 +103,7 @@ function ChatBox() {
                     </div>
                 ))}
             </div>
+            {loading && <div className="text-white py-2">Loading...</div>}
             <div className="flex flex-row items-center w-full">
                 <input
                     type="text"
